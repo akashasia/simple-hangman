@@ -21,14 +21,29 @@ def load_words(file_path):
             if word:
                 words.append(word)
 
+def init_session():
+    session['tries'] = 0
+    session['correct_chars'] = 0
+    if 'gamesWon' not in session:
+        session['gamesWon'] = 0
+        session['gamesLost'] = 0
+
+
 @app.route('/getword')
 def get_word():
     word = random.choice(words)
     # session.clear()
     session['word'] = word
-    session['tries'] = 0
-    session['correct_chars'] = 0
+    init_session()
     response = jsonify({'word_length' : len(word)})
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+
+    return response
+
+@app.route('/getstats')
+def get_statistics():
+    response = jsonify({'gamesWon' : session['gamesWon'] , 'gamesLost' : session['gamesLost']})
     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
 
@@ -52,10 +67,12 @@ def check_char():
         responseObj['character'] = c
         responseObj['positions'] = None
 
-    if session['tries'] >= 10:
+    if session['tries'] >= 5:
         responseObj['gameStatus'] = -1
+        session['gamesLost'] = session['gamesLost'] + 1
     elif session['correct_chars'] == len(set(session['word'])):
         responseObj['gameStatus'] = 1
+        session['gamesWon'] = session['gamesWon'] + 1
     else:
         responseObj['gameStatus'] = 0
 
