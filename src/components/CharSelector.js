@@ -26,7 +26,7 @@ class CharSelector extends Component {
 
   render() {
     let char_buttons = this.props.chars.map((char, i) => {
-      return (<button className = "CharButton" id = {char} key = {char} onClick = {this.onclick}>{char}</button>);
+      return (<button className = "CharButton btn btn-lg btn-primary" id = {char} key = {char} onClick = {this.onclick}>{char}</button>);
     });
 
     return (

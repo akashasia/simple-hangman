@@ -71,10 +71,12 @@ class App extends Component {
   render() {
     return (
       <div className = "App" >
+      <h1> HANGMAN </h1>
+
+        <WinLossIndicator gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
         <WordArea blanks={this.state.blanks} onBlanksChange={this.updateBlanks} />
         <button disableall={this.state.disableAll} onClick={this.getNewWord}>Restart</button>
         <CharSelector onCharSelected={this.charSelected} />
-        <WinLossIndicator gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
       </div>
     );
   }
