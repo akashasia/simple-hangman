@@ -24,6 +24,7 @@ def load_words(file_path):
 def init_session():
     session['tries'] = 0
     session['correct_chars'] = 0
+    session['gameStatus'] = 0
     if 'gamesWon' not in session:
         session['gamesWon'] = 0
         session['gamesLost'] = 0
@@ -31,7 +32,8 @@ def init_session():
 
 @app.route('/getword')
 def get_word():
-    word = random.choice(words)
+    # word = random.choice(words)
+    word = 'PARACHUTE'
     # session.clear()
     session['word'] = word
     init_session()

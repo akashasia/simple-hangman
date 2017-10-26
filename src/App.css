@@ -15,6 +15,9 @@
   color: white;
 }
 
+*{
+  border: 1px solid black;
+}
 .App-title {
   font-size: 1.5em;
 }
@@ -32,12 +35,19 @@
 .CharSelector{
 }
 
+.header{
+  height : 50px;
+}
 .CharButton{
   margin: 3px;
   padding: 5px;
   font-size: 2.5vw;
   width: 50px;
   font-weight: bold;
+}
+
+button{
+
 }
 
 @keyframes App-logo-spin {

@@ -15,10 +15,16 @@ class WinLossIndicator extends Component {
     else if (this.props.gameStatus === 1){
       statusMessage = <div className="alert alert-success">  YOU WIN! </div>;
     }
+    else{
+      statusMessage = null
+    }
 
     return (
+
+
       <div className="WinLossIndicator">
         {statusMessage}
+        <div className="none"> HANGMAN </div>
         Games Won : {this.props.won}
         <br />
         Games Lost : {this.props.lost}

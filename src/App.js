@@ -42,8 +42,8 @@ class App extends Component {
         for(var i = 0; i < json.word_length; i++){
           blanks[i] = ' _ ';
         }
-        this.setState({blanks:blanks})
-
+        this.setState({blanks:blanks, gameStatus : 0})
+        this.charselector.resetButtonStates();
       });
     });
   }
@@ -71,12 +71,10 @@ class App extends Component {
   render() {
     return (
       <div className = "App" >
-      <h1> HANGMAN </h1>
-
         <WinLossIndicator gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
         <WordArea blanks={this.state.blanks} onBlanksChange={this.updateBlanks} />
         <button disableall={this.state.disableAll} onClick={this.getNewWord}>Restart</button>
-        <CharSelector onCharSelected={this.charSelected} />
+        <CharSelector ref={instance => {this.charselector = instance;}} onCharSelected={this.charSelected} />
       </div>
     );
   }
