@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import WordArea from './components/WordArea'
 import CharSelector from './components/CharSelector'
+import HangmanView from './components/HangmanView'
 import WinLossIndicator from './components/WinLossIndicator'
 import './App.css';
-// import logo from './logo.svg';
+
 // Allow keyboard input?
 
 class App extends Component {
-
 
   constructor(){
     super();
@@ -44,6 +44,7 @@ class App extends Component {
         }
         this.setState({blanks:blanks, gameStatus : 0})
         this.charselector.resetButtonStates();
+        this.hangmanview.clearCanvas();
       });
     });
   }
@@ -65,16 +66,43 @@ class App extends Component {
        this.updateStatistics();
     }
 
+    if (responseJson.positions === null){
+      console.log('Hi')
+      this.hangmanview.updateCanvas()
+    }
+
     this.setState({blanks : blanks, gameStatus : responseJson.gameStatus});
   }
+
+  footer(){
+    return (<footer className="footer">
+      <div className="container">
+        <p className="text-muted">@akashasia</p>
+      </div>
+    </footer>);
+    // <button className="btn btn-default btn-primary icon-repeat" onClick={this.getNewWord}>&nbsp;New Game</button>
+
+  }
+
+
 
   render() {
     return (
       <div className = "App" >
         <WinLossIndicator gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
-        <WordArea blanks={this.state.blanks} onBlanksChange={this.updateBlanks} />
-        <button disableall={this.state.disableAll} onClick={this.getNewWord}>Restart</button>
-        <CharSelector ref={instance => {this.charselector = instance;}} onCharSelected={this.charSelected} />
+          <div className="container">
+
+            <div className="col-md-6 text-center">
+              <HangmanView ref={instance => {this.hangmanview = instance;}}/>
+            </div>
+            <div className="col-md-6 text-center">
+            <a className="btn btn-default" onClick={this.getNewWord}>
+              <i className="fa fa-refresh fa-lg"></i> New Game</a>
+                <WordArea blanks={this.state.blanks} onBlanksChange={this.updateBlanks} />
+                <CharSelector ref={instance => {this.charselector = instance;}} onCharSelected={this.charSelected} />
+            </div>
+          </div>
+          {this.footer()}
       </div>
     );
   }

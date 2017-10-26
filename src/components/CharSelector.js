@@ -31,13 +31,13 @@ class CharSelector extends Component {
     this.setState({buttonStates : buttonStates});
   }
 
+
   onclick(e){
     var target = e.target;
 
     fetch('http://localhost:5000/checkchar?c=' + e.target.id, {credentials : 'include'})
     .then(results => {
       results.json().then(json => {
-        console.log(json)
         this.props.onCharSelected(json)
         // target.disabled = true; //disable the button
         var buttonStates = this.state.buttonStates.slice();

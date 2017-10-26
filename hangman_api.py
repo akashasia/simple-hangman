@@ -69,7 +69,7 @@ def check_char():
         responseObj['character'] = c
         responseObj['positions'] = None
 
-    if session['tries'] >= 5:
+    if session['tries'] >= 10:
         responseObj['gameStatus'] = -1
         session['gamesLost'] = session['gamesLost'] + 1
     elif session['correct_chars'] == len(set(session['word'])):

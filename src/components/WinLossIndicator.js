@@ -2,9 +2,41 @@ import React, { Component } from 'react';
 
 class WinLossIndicator extends Component {
 
-  constructor(props){
-    super(props);
+  // constructor(props){
+  //   super(props);
+  // }
+
+  headerBar(){
+    return (
+    <div className="navbar navbar-default navbar-fixed-top">
+      <div className="container">
+
+        <div className="navbar-header">
+          <a href="../" className="navbar-brand">Hangman</a>
+        </div>
+
+        <div className="navbar-collapse collapse" id="navbar-main">
+          <ul className="nav navbar-nav navbar-right">
+            <li>Games Won : {this.props.won}</li>
+            <li>Games Lost : {this.props.lost}</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>);
   }
+
+  // oldHeader(){
+  //   <div className="header">
+  //
+  //     <div className="title align-left"> HANGMAN </div>
+  //     <div className="statistics align-right">
+  //       Games Won : {this.props.won}
+  //       <br />
+  //       Games Lost : {this.props.lost}
+  //     </div>
+  //   </div>
+  // }
 
   render() {
 
@@ -21,13 +53,9 @@ class WinLossIndicator extends Component {
 
     return (
 
-
       <div className="WinLossIndicator">
+        {this.headerBar()}
         {statusMessage}
-        <div className="none"> HANGMAN </div>
-        Games Won : {this.props.won}
-        <br />
-        Games Lost : {this.props.lost}
       </div>
     );
   }
