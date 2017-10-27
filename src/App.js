@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import WordArea from './components/WordArea'
 import CharSelector from './components/CharSelector'
 import HangmanView from './components/HangmanView'
-import WinLossIndicator from './components/WinLossIndicator'
+import HeaderView from './components/HeaderView'
 import './App.css';
-
-// Allow keyboard input?
 
 class App extends Component {
 
@@ -54,20 +52,26 @@ class App extends Component {
   }
 
   charSelected(responseJson){
-    console.log('Selected ' + responseJson.positions);
     var blanks = this.state.blanks
 
-    // for(var i = 0; i < responseJson.positions.length; i++){
     for(var i in responseJson.positions){
       blanks[responseJson.positions[i]] = ' ' + responseJson.character + ' ';
     }
 
     if (responseJson.gameStatus !== 0){
        this.updateStatistics();
+
+       if (responseJson.gameStatus == -1){
+         // If the player has lost, show the actual word
+         var chars = responseJson.word.split("");
+         for(var i = 0; i < chars.length; i++ ){
+             blanks[i] = ' ' + chars[i] + ' ';
+         }
+       }
     }
 
     if (responseJson.positions === null){
-      console.log('Hi')
+      // No positions means the character selected was incorrect
       this.hangmanview.updateCanvas()
     }
 
@@ -80,25 +84,58 @@ class App extends Component {
         <p className="text-muted">@akashasia</p>
       </div>
     </footer>);
-    // <button className="btn btn-default btn-primary icon-repeat" onClick={this.getNewWord}>&nbsp;New Game</button>
-
   }
 
+  infoWindow(){
+    return(
+      <div id="myModal" className="modal fade" role="dialog">
+      <div className="modal-dialog">
 
+        <div className="modal-content">
+          <div className="modal-header">
+            <button type="button" className="close" data-dismiss="modal">&times;</button>
+            <h4 className="modal-title">Hangman</h4>
+          </div>
+          <div className="modal-body">
+            <p>The word to guess is represented by a row of dashes, representing
+             each letter of the word. If the guessing player suggests a letter
+             which occurs in the word, it shall appear in all its correct
+             positions. If the suggested letter does not occur in the word,
+             one element of a hanged man stick figure shall be drawn
+             as a tally mark.</p>
+             <p>
+             After 10 tries, if the word is incomplete, the game is lost.
+             If the word is completed before this, that game is won.
+            </p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    )
+  }
 
   render() {
     return (
       <div className = "App" >
-        <WinLossIndicator gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
+        <HeaderView gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
           <div className="container">
+          {this.infoWindow()}
 
             <div className="col-md-6 text-center">
               <HangmanView ref={instance => {this.hangmanview = instance;}}/>
             </div>
             <div className="col-md-6 text-center">
-            <a className="btn btn-default" onClick={this.getNewWord}>
-              <i className="fa fa-refresh fa-lg"></i> New Game</a>
-                <WordArea blanks={this.state.blanks} onBlanksChange={this.updateBlanks} />
+                <a className="btn btn-default" onClick={this.getNewWord}>
+                  <i className="fa fa-refresh fa-lg"></i> New Game
+                </a>
+                <a className="btn btn-default"  data-toggle="modal" data-target="#myModal">
+                  <i className="fa fa-info-circle fa-lg"></i> How to Play
+                </a>
+                <WordArea blanks={this.state.blanks} gameStatus={this.state.gameStatus}/>
                 <CharSelector ref={instance => {this.charselector = instance;}} onCharSelected={this.charSelected} />
             </div>
           </div>

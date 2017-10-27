@@ -9,7 +9,6 @@ class CharSelector extends Component {
   constructor(props){
     super(props);
     this.onclick = this.onclick.bind(this);
-    // this.resetButtonStates = this.resetButtonStates.bind(this);
 
     var buttonStates = []
     for(var i = 0; i < this.props.chars.length; i++){
@@ -22,6 +21,7 @@ class CharSelector extends Component {
   }
 
   resetButtonStates(){
+    // Called from parent to enable all buttons
     var buttonStates = this.state.buttonStates.slice();
 
     for(var i = 0; i < this.props.chars.length; i++){

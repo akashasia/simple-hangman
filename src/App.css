@@ -1,14 +1,6 @@
 .App {
   text-align: center;
-  min-width: 500px;
-}
-
-
-/*body, html{
-    margin: 0px;
-    width : 100%;
-    height: 100%;
-}*/
+  }
 
 html {
   position: relative;
@@ -16,14 +8,9 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
   margin-bottom: 30px;
   font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
 }
-
-/*.navbar{
-  background-color: #ff6e40;
-}*/
 
 .navbar-right{
     font-size: 17px;
@@ -37,7 +24,7 @@ body {
 }
 
 canvas{
-  border: 1px dashed;
+  border: 1.5px dashed;
   padding: 30px;
 }
 
@@ -52,23 +39,42 @@ canvas{
   background-color: #f5f5f5;
 }
 
+.badge{
+  font-size: 13px;
+}
 .App  > .container{
-  padding-top: 100px;
+  padding-top: 150px;
+}
+.container .btn-default{
+  margin-right: 8px;
+}
+.navbar-brand{
+  font-size: 40px;
 }
 
-.WordArea{
-   font-kerning: 5;
-   font-size: 5vw;
-   white-space: nowrap;
-   padding-top: 30px;
+.alert{
+  position: fixed;
+  font-size: 15px;
+  margin-top: 50px;
+  width: 100%;
+
+}
+
+.modal-body{
+  text-align: left;
+}
+
+.navbar-brand small {
+    display: block;
+    font-size: 15px;
+    text-align: left;
+    margin-left: 10px;
 }
 
 
 .header{
-  /*background-color: #222;*/
   height: inherit;
   padding: 20px;
-  /*color: white;*/
   overflow: auto;
 }
 
@@ -81,10 +87,6 @@ canvas{
   text-align: left;
 }
 
-.alert{
-  position: relative;
-  margin: 50px;
-}
 .align-left{
     float: left;
 }
@@ -105,8 +107,13 @@ canvas{
   font-weight: bold;
 }
 
+.WordArea{
+   font-kerning: 5;
+   font-size: 5vw;
+   white-space: nowrap;
+   padding-top: 30px;
+}
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.lost{
+  color: #a94442;
 }

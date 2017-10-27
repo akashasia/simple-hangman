@@ -2,16 +2,21 @@ import React, { Component } from 'react';
 
 class WordArea extends Component {
 
-  // constructor(props){
-  //   super(props);
-  // }
-
   render() {
-    return (
-      <div className="WordArea">
-        {this.props.blanks}
-      </div>
-    );
+    if (this.props.gameStatus === -1){
+      return (
+        <div className="WordArea lost">
+          {this.props.blanks}
+        </div>
+      );
+    }
+    else{
+      return (
+        <div className="WordArea">
+          {this.props.blanks}
+        </div>
+      );
+    }
   }
 }
 

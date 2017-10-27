@@ -1,4 +1,4 @@
-from flask import Flask, session, jsonify, request
+from flask import Flask, session, jsonify, request, render_template
 import random
 import re
 from string import ascii_letters
@@ -21,7 +21,8 @@ def load_words(file_path):
             if word:
                 words.append(word)
 
-def init_session():
+def init_session(word):
+    session['word'] = word
     session['tries'] = 0
     session['correct_chars'] = 0
     session['gameStatus'] = 0
@@ -32,11 +33,8 @@ def init_session():
 
 @app.route('/getword')
 def get_word():
-    # word = random.choice(words)
-    word = 'PARACHUTE'
-    # session.clear()
-    session['word'] = word
-    init_session()
+    word = random.choice(words)
+    init_session(word)
     response = jsonify({'word_length' : len(word)})
     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
@@ -50,6 +48,10 @@ def get_statistics():
     response.headers.add('Access-Control-Allow-Credentials', 'true')
 
     return response
+
+@app.route('/')
+def index():
+    return render_template('./public/index.html')
 
 @app.route('/checkchar')
 def check_char():
@@ -71,6 +73,7 @@ def check_char():
 
     if session['tries'] >= 10:
         responseObj['gameStatus'] = -1
+        responseObj['word'] = session['word']
         session['gamesLost'] = session['gamesLost'] + 1
     elif session['correct_chars'] == len(set(session['word'])):
         responseObj['gameStatus'] = 1
@@ -85,6 +88,5 @@ def check_char():
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
     load_words('nounlist.txt')
     app.run(debug = True)
