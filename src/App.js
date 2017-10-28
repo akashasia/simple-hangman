@@ -19,8 +19,6 @@ class App extends Component {
       gamesWon : 0,
       gamesLost : 0
     }
-
-    this.updateStatistics()
   }
 
   updateStatistics(){
@@ -36,6 +34,8 @@ class App extends Component {
     console.log(this.state.blanks)
     fetch('http://localhost:5000/getword', {credentials : 'include'}) //same-origin, include
     .then(results => {
+      this.updateStatistics()
+
       results.json().then(json => {
         let blanks = []
         for(var i = 0; i < json.word_length; i++){
