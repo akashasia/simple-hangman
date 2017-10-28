@@ -38,17 +38,11 @@ def get_word():
     init_session()
     session['word'] = word
     response = jsonify({'word_length' : len(word)})
-    # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-    # response.headers.add('Access-Control-Allow-Credentials', 'true')
-
     return response
 
 @app.route('/getstats')
 def get_statistics():
     response = jsonify({'gamesWon' : session['gamesWon'] , 'gamesLost' : session['gamesLost']})
-    # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-    # response.headers.add('Access-Control-Allow-Credentials', 'true')
-
     return response
 
 @app.route('/checkchar')
@@ -80,8 +74,6 @@ def check_char():
         responseObj['gameStatus'] = 0
 
     response = jsonify(responseObj)
-    # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-    # response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
 
 if __name__ == '__main__':
