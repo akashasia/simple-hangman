@@ -1,9 +1,11 @@
-from flask import Flask, session, jsonify, request, render_template
+from flask import Flask, session, jsonify, request
+from flask_cors import CORS
 import random
 import re
 from string import ascii_letters
 
 app = Flask(__name__)
+# CORS(app, supports_credentials = True)
 
 words = []
 letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -21,8 +23,7 @@ def load_words(file_path):
             if word:
                 words.append(word)
 
-def init_session(word):
-    session['word'] = word
+def init_session():
     session['tries'] = 0
     session['correct_chars'] = 0
     session['gameStatus'] = 0
@@ -34,7 +35,13 @@ def init_session(word):
 @app.route('/getword')
 def get_word():
     word = random.choice(words)
-    init_session(word)
+    print(id(session), session)
+    if not session:
+        init_session()
+    print('after init', id(session), session)
+
+    session['word'] = word
+
     response = jsonify({'word_length' : len(word)})
     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
@@ -43,15 +50,14 @@ def get_word():
 
 @app.route('/getstats')
 def get_statistics():
+    if not session:
+        init_session()
+
     response = jsonify({'gamesWon' : session['gamesWon'] , 'gamesLost' : session['gamesLost']})
     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
 
     return response
-
-@app.route('/')
-def index():
-    return render_template('./public/index.html')
 
 @app.route('/checkchar')
 def check_char():

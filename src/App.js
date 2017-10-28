@@ -33,7 +33,7 @@ class App extends Component {
   }
 
   getNewWord(){
-    fetch('http://localhost:5000/getword', {credentials : 'include'}) //same-origin
+    fetch('http://localhost:5000/getword', {credentials : 'include'}) //same-origin, include
     .then(results => {
       results.json().then(json => {
         let blanks = []
@@ -61,10 +61,10 @@ class App extends Component {
     if (responseJson.gameStatus !== 0){
        this.updateStatistics();
 
-       if (responseJson.gameStatus == -1){
+       if (responseJson.gameStatus === -1){
          // If the player has lost, show the actual word
          var chars = responseJson.word.split("");
-         for(var i = 0; i < chars.length; i++ ){
+         for(i = 0; i < chars.length; i++ ){
              blanks[i] = ' ' + chars[i] + ' ';
          }
        }
@@ -109,13 +109,13 @@ class App extends Component {
             </p>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" className="btn btn-default" data-dismiss="modal">Back to Game</button>
           </div>
         </div>
 
       </div>
     </div>
-    )
+  );
   }
 
   render() {
@@ -130,10 +130,10 @@ class App extends Component {
             </div>
             <div className="col-md-6 text-center">
                 <a className="btn btn-default" onClick={this.getNewWord}>
-                  <i className="fa fa-refresh fa-lg"></i> New Game
+                  <i className="glyphicon glyphicon-repeat"></i> New Game
                 </a>
                 <a className="btn btn-default"  data-toggle="modal" data-target="#myModal">
-                  <i className="fa fa-info-circle fa-lg"></i> How to Play
+                  <i className="glyphicon glyphicon-info-sign"></i> How to Play
                 </a>
                 <WordArea blanks={this.state.blanks} gameStatus={this.state.gameStatus}/>
                 <CharSelector ref={instance => {this.charselector = instance;}} onCharSelected={this.charSelected} />

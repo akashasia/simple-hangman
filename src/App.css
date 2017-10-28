@@ -12,6 +12,16 @@ body {
   font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
 }
 
+.glyphicon{
+  font-size: 1.2em;
+  position: inherit;
+  vertical-align: middle;
+}
+/*
+.btn{
+  vertical-align: middle;
+}*/
+
 .navbar-right{
     font-size: 17px;
     position: relative;
