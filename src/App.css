@@ -8,7 +8,7 @@ html {
 }
 
 body {
-  margin-bottom: 30px;
+  margin-bottom: 30px; /* for footer */
   font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
 }
 
@@ -16,33 +16,6 @@ body {
   font-size: 1.2em;
   position: inherit;
   vertical-align: middle;
-}
-
-
-.header-title{
-    float: left;
-    height: 50px;
-    padding: 15px 15px;
-    font-size: 40px;
-    line-height: 20px;
-}
-
-.header-container{
-  padding: 10px 20px;
-  background-color: #eee;
-  overflow: hidden;
-}
-
-.header-score-area{
-  float: right!important;
-  list-style: none;
-  vertical-align: middle;
-  padding-top: 13px;
-}
-
-.header-scores li{
-  display: inline;
-  padding-left: 10px;
 }
 
 .navbar-right{
@@ -117,14 +90,6 @@ canvas{
 .statistics{
   font-size: 1.5em;
   text-align: left;
-}
-
-.align-left{
-    float: left;
-}
-
-.align-right{
-  float : right;
 }
 
 .CharSelector{

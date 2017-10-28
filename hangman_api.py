@@ -1,14 +1,28 @@
-from flask import Flask, session, jsonify, request
+from flask import Flask, session, jsonify, request, make_response
 from flask_cors import CORS
 import random
 import re
 from string import ascii_letters
+from functools import wraps, update_wrapper
+from datetime import datetime
 
 app = Flask(__name__)
-CORS(app, resources = {r'*' : {'origins' : '*'}}, supports_credentials = True)
+CORS(app, resources = {r'*' : {'origins' : 'http://localhost:3000'}}, supports_credentials = True)
 
 words = []
 letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+def nocache(view):
+    @wraps(view)
+    def no_cache(*args, **kwargs):
+        response = make_response(view(*args, **kwargs))
+        response.headers['Last-Modified'] = datetime.now()
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '-1'
+        return response
+
+    return update_wrapper(no_cache, view)
 
 def load_words(file_path):
     with open(file_path) as word_file:
@@ -33,6 +47,7 @@ def init_session():
 
 
 @app.route('/getword')
+@nocache # Make sure we're not reusing old cached words (reopen closed tab issue)
 def get_word():
     word = random.choice(words)
     init_session()

@@ -33,6 +33,7 @@ class App extends Component {
   }
 
   getNewWord(){
+    console.log(this.state.blanks)
     fetch('http://localhost:5000/getword', {credentials : 'include'}) //same-origin, include
     .then(results => {
       results.json().then(json => {
@@ -40,6 +41,7 @@ class App extends Component {
         for(var i = 0; i < json.word_length; i++){
           blanks[i] = ' _ ';
         }
+        console.log(json)
         this.setState({blanks:blanks, gameStatus : 0})
         this.charselector.resetButtonStates();
         this.hangmanview.clearCanvas();
