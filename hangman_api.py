@@ -5,7 +5,7 @@ import re
 from string import ascii_letters
 
 app = Flask(__name__)
-# CORS(app, supports_credentials = True)
+CORS(app, resources = {r'*' : {'origins' : '*'}}, supports_credentials = True)
 
 words = []
 letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -35,27 +35,19 @@ def init_session():
 @app.route('/getword')
 def get_word():
     word = random.choice(words)
-    print(id(session), session)
-    if not session:
-        init_session()
-    print('after init', id(session), session)
-
+    init_session()
     session['word'] = word
-
     response = jsonify({'word_length' : len(word)})
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    # response.headers.add('Access-Control-Allow-Credentials', 'true')
 
     return response
 
 @app.route('/getstats')
 def get_statistics():
-    if not session:
-        init_session()
-
     response = jsonify({'gamesWon' : session['gamesWon'] , 'gamesLost' : session['gamesLost']})
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    # response.headers.add('Access-Control-Allow-Credentials', 'true')
 
     return response
 
@@ -88,8 +80,8 @@ def check_char():
         responseObj['gameStatus'] = 0
 
     response = jsonify(responseObj)
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    # response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
 
 if __name__ == '__main__':

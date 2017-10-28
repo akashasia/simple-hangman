@@ -81,7 +81,7 @@ class App extends Component {
   footer(){
     return (<footer className="footer">
       <div className="container">
-        <p className="text-muted">@akashasia</p>
+        <p className="text">@akashasia</p>
       </div>
     </footer>);
   }
