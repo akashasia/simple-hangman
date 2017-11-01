@@ -20,14 +20,26 @@ class CharSelector extends Component {
     }
   }
 
+  getCharIndex(char){
+    var ascii = char.charCodeAt(0)
+    return ascii - 65;
+  }
+
   resetButtonStates(){
     // Called from parent to enable all buttons
     var buttonStates = this.state.buttonStates.slice();
 
+    //Enable all buttons
     for(var i = 0; i < this.props.chars.length; i++){
       buttonStates[i] = false;
     }
 
+    // Disable used chars from saved game, if any
+    for(i = 0; i < this.props.usedChars.length; i++){
+      var buttonIndex = this.getCharIndex(this.props.usedChars[i])
+      buttonStates[buttonIndex] = true;
+    }
+    
     this.setState({buttonStates : buttonStates});
   }
 
@@ -42,7 +54,8 @@ class CharSelector extends Component {
         // target.disabled = true; //disable the button
         var buttonStates = this.state.buttonStates.slice();
 
-        if (json.gameStatus === 1 || json.gameStatus === -1){
+        if (json.gameStatus !== 0){
+          // Disable all buttons if game is not in progress i.e won or lost
           for(var i = 0; i < this.props.chars.length; i++){
             buttonStates[i] = true;
           }

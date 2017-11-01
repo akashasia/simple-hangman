@@ -6,13 +6,13 @@ class HangmanView extends Component {
     super(props);
     this.state = {
       status : -1,
-    }
+    };
   }
 
   clearCanvas(){
     this.setState({
       status : -1,
-    })
+    });
 
     const context = this.refs.canvas.getContext('2d');
     context.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
@@ -20,21 +20,46 @@ class HangmanView extends Component {
   }
 
   updateCanvas(){
-    // Hangman canvas drawing code generated with help from
-    // http://www.cs.toronto.edu/~noam/c-generator.html
-
     var status = this.state.status;
     status += 1;
+
+    this.updateCanvasExplicit(status);
+  }
+
+  updateCanvasExplicit(status){
+    // Hangman canvas drawing code generated with help from
+    // http://www.cs.toronto.edu/~noam/c-generator.html
 
     const context = this.refs.canvas.getContext('2d');
     context.lineWidth = 2;
     context.beginPath();
+
+    // if (status >= 1){
+    //   context.moveTo(9,355);
+    //   context.lineTo(205,355);
+    // }
+    //
+    // if (status >= 2){
+    //   context.moveTo(9,355);
+    //   context.lineTo(9,24);
+    // }
+    //
+    // if (status >= 3){
+    //   context.moveTo(9,24);
+    //   context.lineTo(94,24);
+    // }
+    //
+    // if (status >= 4){
+    //   context.moveTo(94,24);
+    //   context.lineTo(95,59);
+    // }
 
     switch(status){
       case 1:
         context.moveTo(9,355);
         context.lineTo(205,355);
         break;
+
       case 2:
         context.moveTo(9,355);
         context.lineTo(9,24);

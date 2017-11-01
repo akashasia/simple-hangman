@@ -12,6 +12,19 @@ body {
   font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
 }
 
+.ReactModal__Overlay {
+  opacity: 0;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+  transition: opacity 200ms ease-in-out;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
 .glyphicon{
   font-size: 1.2em;
   position: inherit;

@@ -3,6 +3,10 @@ import WordArea from './components/WordArea'
 import CharSelector from './components/CharSelector'
 import HangmanView from './components/HangmanView'
 import HeaderView from './components/HeaderView'
+import InfoWindowModal from './components/InfoWindowModal'
+import ConfirmNewGameModal from './components/ConfirmNewGameModal'
+import Footer from './components/Footer'
+
 import './App.css';
 
 class App extends Component {
@@ -10,19 +14,23 @@ class App extends Component {
   constructor(){
     super();
     this.charSelected = this.charSelected.bind(this);
+    this.getWord = this.getWord.bind(this);
     this.getNewWord = this.getNewWord.bind(this);
     this.updateStatistics = this.updateStatistics.bind(this);
+    this.onNewGameRequested = this.onNewGameRequested.bind(this);
+    this.showInfo = this.showInfo.bind(this);
 
     this.state = {
       blanks : [],
       gameStatus : 0,
       gamesWon : 0,
-      gamesLost : 0
+      gamesLost : 0,
+      usedChars : [],
     }
   }
 
   updateStatistics(){
-    fetch('http://localhost:5000/getstats', {credentials : 'include'}) //same-origin
+    fetch('http://localhost:5000/getstats', {credentials : 'include'})
     .then(results => {
       results.json().then(json => {
         this.setState({gamesWon:json.gamesWon, gamesLost:json.gamesLost});
@@ -30,31 +38,85 @@ class App extends Component {
     });
   }
 
-  getNewWord(){
-    console.log(this.state.blanks)
-    fetch('http://localhost:5000/getword', {credentials : 'include'}) //same-origin, include
+  onNewGameRequested(){
+    if (this.state.gameStatus === 0){
+      // Game is in progress, inform the user that this will count as a loss
+      this.refs.newGameModal.handleOpenModal();
+    }
+    else {
+      this.getWord(false);
+    }
+  }
+
+  getWord(newWord){
+    var url = 'http://localhost:5000/getword';
+
+    if (newWord)
+      url = url + '?newgame=True'
+
+    fetch(url, {credentials : 'include'})
     .then(results => {
-      this.updateStatistics()
+      this.updateStatistics();
 
       results.json().then(json => {
-        let blanks = []
+        console.log(json)
+        let blanks = [];
+        let usedChars = [];
+
         for(var i = 0; i < json.word_length; i++){
           blanks[i] = ' _ ';
         }
-        console.log(json)
-        this.setState({blanks:blanks, gameStatus : 0})
+
+        if (json.resumed_game === true){
+          // load saved game state
+
+          usedChars = json.tries;
+
+          // load correctly guessed chars for display
+          for (var char in json.correct_chars){
+
+            //add correctly guessed characters to usedChars as well
+            usedChars.push(char);
+
+            for(i = 0; i < json.correct_chars[char].length; i++){
+              var index = json.correct_chars[char][i]
+              blanks[index] = char;
+            }
+          }
+
+        }
+
+        this.setState({
+          blanks : blanks,
+          gameStatus : 0,
+          usedChars : usedChars,
+        });
+
+        // update button states
         this.charselector.resetButtonStates();
-        this.hangmanview.clearCanvas();
+
+        // update hangman stick figure
+        if (usedChars.length === 0) {
+          this.hangmanview.clearCanvas();
+        }
+        else {
+          this.hangmanview.updateCanvasExplicit(json.tries.length);
+        }
+
       });
     });
   }
 
+  getNewWord(){
+    this.getWord(true);
+  }
+
   componentWillMount(){
-    this.getNewWord()
+    this.getWord(false);
   }
 
   charSelected(responseJson){
-    var blanks = this.state.blanks
+    var blanks = this.state.blanks;
 
     for(var i in responseJson.positions){
       blanks[responseJson.positions[i]] = ' ' + responseJson.character + ' ';
@@ -80,44 +142,34 @@ class App extends Component {
     this.setState({blanks : blanks, gameStatus : responseJson.gameStatus});
   }
 
-  footer(){
-    return (<footer className="footer">
-      <div className="container">
-        <p className="text">@akashasia</p>
+
+  confirmNewGameDialog(){
+    return (
+      <div ref="newgamedialog" className="modal fade" id="confirm-delete" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div className="modal-dialog">
+          <div className="modal-content">
+
+              <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 className="modal-title" id="myModalLabel">Confirm New Game</h4>
+              </div>
+
+              <div className="modal-body">
+                  <p>Starting a new game while a game in progress will result in the current game counting as a loss.</p>
+                  <p>Do you want to continue?</p>
+              </div>
+
+              <div className="modal-footer">
+                  <button type="button" className="btn btn-default" data-dismiss="modal">Go Back</button>
+                  <a className="btn btn-danger btn-ok" data-dismiss="modal" onClick={this.getWord}>Yes, I admit defeat</a>
+              </div>
+          </div>
       </div>
-    </footer>);
+    </div>);
   }
 
-  infoWindow(){
-    return(
-      <div id="myModal" className="modal fade" role="dialog">
-      <div className="modal-dialog">
-
-        <div className="modal-content">
-          <div className="modal-header">
-            <button type="button" className="close" data-dismiss="modal">&times;</button>
-            <h4 className="modal-title">Hangman</h4>
-          </div>
-          <div className="modal-body">
-            <p>The word to guess is represented by a row of dashes, representing
-             each letter of the word. If the guessing player suggests a letter
-             which occurs in the word, it shall appear in all its correct
-             positions. If the suggested letter does not occur in the word,
-             one element of a hanged man stick figure shall be drawn
-             as a tally mark.</p>
-             <p>
-             After 10 tries, if the word is incomplete, the game is lost.
-             If the word is completed before this, that game is won.
-            </p>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-default" data-dismiss="modal">Back to Game</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  );
+  showInfo(){
+    this.refs.infoWindow.handleOpenModal();
   }
 
   render() {
@@ -125,23 +177,29 @@ class App extends Component {
       <div className = "App" >
         <HeaderView gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
           <div className="container">
-          {this.infoWindow()}
+
+            <InfoWindowModal ref="infoWindow"/>
+            <ConfirmNewGameModal ref="newGameModal" onConfirm={this.getNewWord}/>
 
             <div className="col-md-6 text-center">
               <HangmanView ref={instance => {this.hangmanview = instance;}}/>
             </div>
+
             <div className="col-md-6 text-center">
-                <a className="btn btn-default" onClick={this.getNewWord}>
+                <a className="btn btn-default" onClick={this.onNewGameRequested}>
                   <i className="glyphicon glyphicon-repeat"></i> New Game
                 </a>
-                <a className="btn btn-default"  data-toggle="modal" data-target="#myModal">
-                  <i className="glyphicon glyphicon-info-sign"></i> How to Play
+                <a className="btn btn-default"  data-toggle="modal" data-target="#infoWindow" onClick={this.showInfo}>
+                  <i className="glyphicon glyphicon-info-sign" ></i> How to Play
                 </a>
                 <WordArea blanks={this.state.blanks} gameStatus={this.state.gameStatus}/>
-                <CharSelector ref={instance => {this.charselector = instance;}} onCharSelected={this.charSelected} />
+                <CharSelector usedChars = {this.state.usedChars} ref={instance => {this.charselector = instance;}}
+                    onCharSelected={this.charSelected} />
             </div>
+
           </div>
-          {this.footer()}
+
+          <Footer />
       </div>
     );
   }
