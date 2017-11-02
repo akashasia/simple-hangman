@@ -13,13 +13,13 @@ After installing the above, run `python hangman_api.py` to start the service.
 It should be running on port 5000.
 
 ## For the front-end
-Requires Node and NPM to be installed(http://nodejs.org)
+Requires Node.js and NPM to be installed(http://nodejs.org)
 
 Once installed, execute `npm install` to install all the dependencies required.
 
 Run `npm start` to start the development web server. It should serve the website
 at http://localhost:3000
 
-## Running the TestCase
+## Running the Test Cases
 
-Run `python test_hangman_api.py` to run the unit tests.
+Run `python test_hangman_api.py` to run the tests.

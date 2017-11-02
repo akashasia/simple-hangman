@@ -16,6 +16,11 @@ body {
   opacity: 0;
 }
 
+.ReactModal__Content--after-open{
+  background: none!important;
+  border: none!important;
+}
+
 .ReactModal__Overlay--after-open {
   opacity: 1;
   transition: opacity 200ms ease-in-out;
@@ -118,7 +123,6 @@ canvas{
 }
 
 .WordArea{
-   font-kerning: 5;
    font-size: 3.5vw;
    white-space: nowrap;
    padding-top: 30px;
