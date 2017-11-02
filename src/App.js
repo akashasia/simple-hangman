@@ -13,19 +13,36 @@ class App extends Component {
 
   constructor(){
     super();
+
     this.charSelected = this.charSelected.bind(this);
     this.getWord = this.getWord.bind(this);
     this.getNewWord = this.getNewWord.bind(this);
     this.updateStatistics = this.updateStatistics.bind(this);
     this.onNewGameRequested = this.onNewGameRequested.bind(this);
     this.showInfo = this.showInfo.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
 
     this.state = {
       blanks : [],
       gameStatus : 0,
       gamesWon : 0,
       gamesLost : 0,
+      keyboardAllowed : false,
       usedChars : [],
+    }
+  }
+
+  onKeyDown(event){
+    const keyPressed = event.key.toUpperCase();
+    //Check if a valid button is pressed i.e. characters A to Z
+    if (keyPressed.length === 1){
+       let charCode = keyPressed.charCodeAt(0);
+       if (charCode >= 65 && charCode <= 90){
+         //Make sure we dont try a character that's already used
+         if (this.state.usedChars.indexOf(keyPressed) === -1){
+           this.charselector.onCharSelected(keyPressed);
+          }
+       }
     }
   }
 
@@ -139,7 +156,14 @@ class App extends Component {
       this.hangmanview.updateCanvas()
     }
 
-    this.setState({blanks : blanks, gameStatus : responseJson.gameStatus});
+    var usedChars = this.state.usedChars;
+    usedChars.push(responseJson.character);
+
+    this.setState({
+      blanks : blanks,
+      gameStatus : responseJson.gameStatus,
+      usedChars : usedChars
+    });
   }
 
 
@@ -174,10 +198,10 @@ class App extends Component {
 
   render() {
     return (
-      <div className = "App" >
+      <div onKeyDown={this.onKeyDown} tabIndex="0" ref="appContainer" className = "App" >
         <HeaderView gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
-          <div className="container">
 
+          <div className="container">
             <InfoWindowModal ref="infoWindow"/>
             <ConfirmNewGameModal ref="newGameModal" onConfirm={this.getNewWord}/>
 

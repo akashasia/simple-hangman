@@ -8,7 +8,8 @@ class CharSelector extends Component {
 
   constructor(props){
     super(props);
-    this.onclick = this.onclick.bind(this);
+    this.onCharSelected = this.onCharSelected.bind(this);
+    this.onClick = this.onClick.bind(this);
 
     var buttonStates = []
     for(var i = 0; i < this.props.chars.length; i++){
@@ -39,15 +40,12 @@ class CharSelector extends Component {
       var buttonIndex = this.getCharIndex(this.props.usedChars[i])
       buttonStates[buttonIndex] = true;
     }
-    
+
     this.setState({buttonStates : buttonStates});
   }
 
-
-  onclick(e){
-    var target = e.target;
-
-    fetch('http://localhost:5000/checkchar?c=' + e.target.id, {credentials : 'include'})
+  onCharSelected(char){
+    fetch('http://localhost:5000/checkchar?c=' + char, {credentials : 'include'})
     .then(results => {
       results.json().then(json => {
         this.props.onCharSelected(json)
@@ -61,7 +59,7 @@ class CharSelector extends Component {
           }
         }
         else {
-          buttonStates[this.props.chars.indexOf(target.id)] = true;
+          buttonStates[this.props.chars.indexOf(char)] = true;
         }
 
         this.setState({buttonStates : buttonStates});
@@ -69,10 +67,15 @@ class CharSelector extends Component {
     });
   }
 
+  onClick(e){
+    var target = e.target;
+    this.onCharSelected(e.target.id);
+  }
+
   render() {
 
     let char_buttons = this.props.chars.map((char, i) => {
-      return (<button className = "CharButton btn btn-lg btn-primary" id = {char} key = {char} onClick = {this.onclick}
+      return (<button className = "CharButton btn btn-lg btn-primary" id = {char} key = {char} onClick = {this.onClick}
                     disabled={this.state.buttonStates[i]}>{char}</button>);
     });
 
