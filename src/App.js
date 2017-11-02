@@ -27,22 +27,26 @@ class App extends Component {
       gameStatus : 0,
       gamesWon : 0,
       gamesLost : 0,
-      keyboardAllowed : false,
+      keyboardAllowed : true,
       usedChars : [],
     };
   }
 
   onKeyDown(event){
-    const keyPressed = event.key.toUpperCase();
-    //Check if a valid button is pressed i.e. characters A to Z
-    if (keyPressed.length === 1){
-       let charCode = keyPressed.charCodeAt(0);
-       if (charCode >= 65 && charCode <= 90){
-         //Make sure we dont try a character that's already used
-         if (this.state.usedChars.indexOf(keyPressed) === -1){
-           this.charselector.onCharSelected(keyPressed);
-          }
-       }
+    if (this.state.keyboardAllowed){
+      const keyPressed = event.key.toUpperCase();
+      //Check if a valid button is pressed i.e. characters A to Z
+      if (keyPressed.length === 1){
+         let charCode = keyPressed.charCodeAt(0);
+         if (charCode >= 65 && charCode <= 90){
+           //Make sure we dont try a character that's already used
+           if (this.state.usedChars.indexOf(keyPressed) === -1){
+             // Disable further keybaord input until request complete
+             this.setState({keyboardAllowed : false});
+             this.charselector.onCharSelected(keyPressed);
+            }
+         }
+      }
     }
   }
 
@@ -160,7 +164,8 @@ class App extends Component {
     this.setState({
       blanks : blanks,
       gameStatus : responseJson.gameStatus,
-      usedChars : usedChars
+      usedChars : usedChars,
+      keyboardAllowed : true,
     });
   }
 

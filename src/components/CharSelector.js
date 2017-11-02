@@ -58,7 +58,7 @@ class CharSelector extends Component {
     fetch('http://localhost:5000/checkchar?c=' + char, {credentials : 'include'})
     .then(results => {
       results.json().then(json => {
-        this.props.onCharSelected(json)
+        this.props.onCharSelected(json);
 
         var buttonStates = this.state.buttonStates.slice();
 
@@ -76,6 +76,7 @@ class CharSelector extends Component {
           buttonStates : buttonStates,
           style : {},
         });
+
       });
     });
   }
