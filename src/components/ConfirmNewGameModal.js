@@ -6,7 +6,7 @@ class InfoWindowModal extends Component {
     super(props);
 
     this.state = {
-      showModal: false
+      showModal: false,
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -43,7 +43,7 @@ class InfoWindowModal extends Component {
                    </div>
 
                    <div className="modal-body">
-                       <p>Starting a new game while a game in progress will result in the current game counting as a loss.</p>
+                       <p>Starting a new game while a game is in progress will result in the current game counting as a loss.</p>
                        <p>Do you want to continue?</p>
                    </div>
 

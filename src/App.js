@@ -29,7 +29,7 @@ class App extends Component {
       gamesLost : 0,
       keyboardAllowed : false,
       usedChars : [],
-    }
+    };
   }
 
   onKeyDown(event){
@@ -69,14 +69,13 @@ class App extends Component {
     var url = 'http://localhost:5000/getword';
 
     if (newWord)
-      url = url + '?newgame=True'
+      url = url + '?newgame=True';
 
     fetch(url, {credentials : 'include'})
     .then(results => {
       this.updateStatistics();
 
       results.json().then(json => {
-        console.log(json)
         let blanks = [];
         let usedChars = [];
 
@@ -87,7 +86,7 @@ class App extends Component {
         if (json.resumed_game === true){
           // load saved game state
 
-          usedChars = json.tries;
+          usedChars = json.tries.slice();
 
           // load correctly guessed chars for display
           for (var char in json.correct_chars){
@@ -100,7 +99,6 @@ class App extends Component {
               blanks[index] = char;
             }
           }
-
         }
 
         this.setState({
@@ -124,12 +122,12 @@ class App extends Component {
     });
   }
 
-  getNewWord(){
-    this.getWord(true);
-  }
-
   componentWillMount(){
     this.getWord(false);
+  }
+
+  componentDidMount(){
+    document.addEventListener("keydown", this.onKeyDown);
   }
 
   charSelected(responseJson){
@@ -153,7 +151,7 @@ class App extends Component {
 
     if (responseJson.positions === null){
       // No positions means the character selected was incorrect
-      this.hangmanview.updateCanvas()
+      this.hangmanview.updateCanvas();
     }
 
     var usedChars = this.state.usedChars;
@@ -166,39 +164,17 @@ class App extends Component {
     });
   }
 
-
-  confirmNewGameDialog(){
-    return (
-      <div ref="newgamedialog" className="modal fade" id="confirm-delete" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div className="modal-dialog">
-          <div className="modal-content">
-
-              <div className="modal-header">
-                  <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 className="modal-title" id="myModalLabel">Confirm New Game</h4>
-              </div>
-
-              <div className="modal-body">
-                  <p>Starting a new game while a game in progress will result in the current game counting as a loss.</p>
-                  <p>Do you want to continue?</p>
-              </div>
-
-              <div className="modal-footer">
-                  <button type="button" className="btn btn-default" data-dismiss="modal">Go Back</button>
-                  <a className="btn btn-danger btn-ok" data-dismiss="modal" onClick={this.getWord}>Yes, I admit defeat</a>
-              </div>
-          </div>
-      </div>
-    </div>);
-  }
-
   showInfo(){
     this.refs.infoWindow.handleOpenModal();
   }
 
+  getNewWord(){
+    this.getWord(true);
+  }
+
   render() {
     return (
-      <div onKeyDown={this.onKeyDown} tabIndex="0" ref="appContainer" className = "App" >
+      <div ref="appContainer" className = "App" >
         <HeaderView gameStatus={this.state.gameStatus} won={this.state.gamesWon} lost={this.state.gamesLost}/>
 
           <div className="container">

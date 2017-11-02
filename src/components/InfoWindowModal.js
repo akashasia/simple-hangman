@@ -27,8 +27,7 @@ class InfoWindowModal extends Component {
         <ReactModal
            isOpen={this.state.showModal}
            contentLabel="Info"
-           closeTimeoutMS={200}
-           >
+           closeTimeoutMS={200}>
 
             <div className="modal-dialog">
               <div className="modal-content">
@@ -46,8 +45,9 @@ class InfoWindowModal extends Component {
                    as a tally mark.</p>
                    <p>
                    After 10 tries, if the word is incomplete, the game is lost.
-                   If the word is completed before this, that game is won.
+                   If the word is completed before this, the game is won.
                   </p>
+                  <p> P.S. <strong> The keyboard can also be used as a valid input method </strong> </p>
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default" onClick={this.handleCloseModal}>Back to Game</button>

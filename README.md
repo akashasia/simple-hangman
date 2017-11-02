@@ -19,3 +19,7 @@ Once installed, execute `npm install` to install all the dependencies required.
 
 Run `npm start` to start the development web server. It should serve the website
 at http://localhost:3000
+
+## Running the TestCase
+
+Run `python test_hangman_api.py` to run the unit tests.

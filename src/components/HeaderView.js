@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 class WinLossIndicator extends Component {
 
   headerBar(){
-
-      return (
+    return (
       <div className="navbar navbar-default navbar-fixed-top">
         <div className="container">
 

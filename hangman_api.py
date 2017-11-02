@@ -7,15 +7,19 @@ from datetime import datetime
 
 # Create our flask app
 app = Flask(__name__)
+# Set our secret key for session management
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+
 # Allow cross-origin resource sharing between app and front-end
 CORS(app, resources = {'*' : {'origins' : 'http://localhost:3000'}}, supports_credentials = True)
 
 words = []
 letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-# Define decorator to explicitly state that a response to the API call should
-# not be cached
 def nocache(view):
+    """Decorator to explicitly state that a response to the API call should
+    not be cached by the client
+    """
     @wraps(view)
     def no_cache(*args, **kwargs):
         response = make_response(view(*args, **kwargs))
@@ -33,7 +37,8 @@ def load_words(file_path):
     """
 
     with open(file_path) as word_file:
-        global words
+        words = []
+
         for word in word_file.readlines():
             word = word.strip().upper()
 
@@ -44,14 +49,16 @@ def load_words(file_path):
             if word:
                 words.append(word)
 
+        return words
+
 def reset_session():
     """Resets the current session to prepare for a new game/word
     Statistics are not cleared and are maintained between games
     """
 
-    session['tries'] = []
-    session['correct_chars'] = []
-    session['gameStatus'] = 0
+    session['tries'] = [] # Incorrect guesses
+    session['correct_chars'] = [] # Correct guesses
+    session['gameStatus'] = 0 # -1,0 or 1 for lost, in progress or won
 
 @app.route('/getword')
 @nocache # Make sure we're not reusing old cached words (reopen closed tab issue)
@@ -156,6 +163,5 @@ def check_char():
     return response
 
 if __name__ == '__main__':
-    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-    load_words('nounlist.txt')
+    words = load_words('nounlist.txt')
     app.run(debug = True)

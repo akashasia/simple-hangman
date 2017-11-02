@@ -68,7 +68,6 @@ class CharSelector extends Component {
   }
 
   onClick(e){
-    var target = e.target;
     this.onCharSelected(e.target.id);
   }
 

@@ -34,7 +34,8 @@ class HangmanView extends Component {
     context.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
     context.lineWidth = 2;
     context.beginPath();
-
+    console.log(status)
+    
     if (status >= 1){
       context.moveTo(9,355);
       context.lineTo(205,355);
@@ -87,7 +88,7 @@ class HangmanView extends Component {
       context.moveTo(93,165);
       context.lineTo(131,224);
     }
-    
+
     context.stroke();
     this.setState({status : status});
   }
