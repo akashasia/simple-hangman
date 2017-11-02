@@ -4,7 +4,7 @@ class CharSelector extends Component {
 
   static defaultProps = {
     chars : "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
-  }
+  };
 
   constructor(props){
     super(props);
@@ -18,6 +18,7 @@ class CharSelector extends Component {
 
     this.state = {
       buttonStates : buttonStates,
+      style : {},
     }
   }
 
@@ -45,11 +46,20 @@ class CharSelector extends Component {
   }
 
   onCharSelected(char){
+
+    this.setState({
+      style : {
+        opacity: 0.5,
+        pointerEvents: 'none',
+        transition: 'opacity 100ms ease-in-out',
+      }
+    });
+
     fetch('http://localhost:5000/checkchar?c=' + char, {credentials : 'include'})
     .then(results => {
       results.json().then(json => {
         this.props.onCharSelected(json)
-        // target.disabled = true; //disable the button
+
         var buttonStates = this.state.buttonStates.slice();
 
         if (json.gameStatus !== 0){
@@ -62,7 +72,10 @@ class CharSelector extends Component {
           buttonStates[this.props.chars.indexOf(char)] = true;
         }
 
-        this.setState({buttonStates : buttonStates});
+        this.setState({
+          buttonStates : buttonStates,
+          style : {},
+        });
       });
     });
   }
@@ -79,7 +92,7 @@ class CharSelector extends Component {
     });
 
     return (
-      <div className="CharSelector">
+      <div className="CharSelector" style={this.state.style}>
         {char_buttons}
       </div>
     );

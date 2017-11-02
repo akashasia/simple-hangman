@@ -18,7 +18,7 @@ class HangmanTest(unittest.TestCase):
         positions = hangman_api.get_char_positions('A','ABRACADABRA')
 
         # Check if we got the correct positions for 'A'
-        self.assertCountEqual(positions, [0, 3, 5,  7, 10])
+        self.assertCountEqual(positions, [0, 3, 5, 7, 10])
 
 
 class HangmanAPITest(unittest.TestCase):
